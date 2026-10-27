@@ -14,11 +14,11 @@ public class Inventory
         if (HasItem(newItemToAdd.name))
         {
             Item currentItem = FindItem(newItemToAdd.name);
-            currentItem.count += 1;
+            currentItem.count += item.count;
         }
         else if (inventoryList.Count != capacity) 
         {
-            Item addItem = new Item(item.name);
+            Item addItem = new Item(item.name, item.count);
             inventoryList.Add(addItem);
         }
         else Debug.Log("Инвентарь заполнен");
@@ -33,7 +33,7 @@ public class Inventory
             {
                 itemToRemove.count -= item.count;
             }
-            else if (itemToRemove.count == 1)
+            else if (itemToRemove.count == 1 || itemToRemove.count == item.count)
             {
                 inventoryList.Remove(itemToRemove);
             }
