@@ -7,17 +7,17 @@ public class Battle : MonoBehaviour
 
     private person choosePerson;
     private enemy chooseEnemy;
-    
-     
+
+
     
     void Awake()
     {
         switch (choosePerson)
         {
-            case 0:
+            case person.Enemy:
                 Debug.Log("Choose person");
             case 1:
-
+                
             default:
         }:
 
@@ -35,33 +35,49 @@ public class Battle : MonoBehaviour
     }
 }
 
-public class Warrior : IPerson{
-    health = 100;
-    damage = Random.Range(10,16);
+public class Warrior : Person{
+    public void Warrior(){
+        health = 100;
+        minDamage = 10;
+        maxDamage = 16;
+    }
 }
 
-public class Mage : IPerson{
-    health = 130;
-    damage = Random.Range(6,12);
+public class Mage : Person{
+    public void Mage(){
+        health = 130;
+        minDamage = 6;
+        maxDamage = 12;
+    }
 }
 
-public class Goblin : IPerson{
-    health = 50;
-    damage = Random.Range(4,8);
+public class Goblin : Person{
+    public void Goblin{
+        health = 50;
+        minDamage = 4;
+        maxDamage = 8;
+    }
 }
 
-public class Ork : IPerson{
-    health = 80;
-    damage = Random.Range(5,10);
+public class Ork : Person{
+    public void Ork{
+        health = 80;
+        minDamage = 5;
+        maxDamage = 10;
+    }
 }
 
-public class Troll : IPerson{
-    health = 140;
-    damage = Random.Range(8,12);
+public class Troll : Person{
+    public void Troll{
+        health = 140;
+        minDamage = 8;
+        maxDamage = 12;
+    }
 }
 
-public interface IPerson
+public abstract class Person
 {
-    public int health;
-    public int damage;
+    int health;
+    int minDamage;
+    int maxDamage;
 }
