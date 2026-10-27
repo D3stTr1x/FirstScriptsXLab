@@ -583,7 +583,7 @@ MonoBehaviour:
   elementPlayer: 2
   baseDamage: 10
   criticalHit: 0.4
-  armor: 2
+  armor: 21
 --- !u!54 &1249403901
 Rigidbody:
   m_ObjectHideFlags: 0
