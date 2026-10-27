@@ -51,11 +51,14 @@ public class Inventory
         if (inventoryList.Count == 0)
             Debug.Log("Инвентарь пуст");
         string result = "";
+        int fullCount = 0;
         foreach (var item in inventoryList)
         {
             result += $" {item.name}: {item.count} ;";
+            fullCount += item.count;
         }
         Debug.Log(result);
+        Debug.Log($"Уникальных предметов: {inventoryList.Count}, Всего предметов: {fullCount}");
     }
 
     private bool HasItem(string name)

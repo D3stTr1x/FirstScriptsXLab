@@ -5,7 +5,7 @@ public class Damage : MonoBehaviour
 {
     [SerializeField] private float health;
 
-    private enum Elements {Empty, Fire, Ice};
+    private enum Elements {Empty, Fire, Ice, Magic};
     [SerializeField] private Elements elementRb;
     [SerializeField] private Elements elementPlayer;
 
