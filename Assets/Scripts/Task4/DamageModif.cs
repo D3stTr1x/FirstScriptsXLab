@@ -47,7 +47,7 @@ public class DamageModif : MonoBehaviour
         int damage = UnityEngine.Random.Range(attacker.minDamage, attacker.maxDamage + 1);
 
 
-            if (target.health > 1)
+            if (target.health > 0)
             {
                 float currentDamage = damage - target.armor;
                 if (currentDamage > 1)
@@ -60,6 +60,22 @@ public class DamageModif : MonoBehaviour
                             if (UnityEngine.Random.value < attacker.criticalHit)
                             {
                                 currentDamage *= 2f;
+                            }
+                            
+                            if (attacker.weapon != null)
+                            {
+                                if (attacker.weapon.name == "Knife")
+                                {
+                                    currentDamage += 2;
+                                }
+                                else if (attacker.weapon.name == "Sword")
+                                {
+                                    currentDamage += 4;
+                                }
+                                else if (attacker.weapon.name == "Magic" && attacker.GetType().Name == "Mage")
+                                {
+                                    currentDamage += 4;
+                                }
                             }
                         }
                         else

@@ -23,6 +23,8 @@ public class BattleModif : MonoBehaviour
     public Person personBattle;
     public Person enemyBattle;
 
+    private InventoryModif inventory;
+
     
     void Awake()
     {
@@ -75,10 +77,12 @@ public class BattleModif : MonoBehaviour
         }*/
         personBattle = CurrentPerson.Create(person);
         enemyBattle = CurrentPerson.Create(enemy);
+        
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        inventory = new InventoryModif();
         Debug.Log("Start Battle!");
         if (personBattle == null || enemyBattle == null)
             Debug.Log("Выберите противников в inspector");
@@ -103,11 +107,12 @@ public class BattleModif : MonoBehaviour
             {
                 DamageModif.CalculateDamage(enemyBattle, personBattle);
             }
-            Debug.Log($"Осталось HP в сражении: {personBattle.GetType()} - {personBattle.health}HP и {enemyBattle.GetType()} - {enemyBattle.health}HP");
+            if (enemyBattle.health > 0 && personBattle.health > 0)
+                Debug.Log($"Осталось HP в сражении: {personBattle.GetType()} - {personBattle.health}HP и {enemyBattle.GetType()} - {enemyBattle.health}HP");
 
         }
         Debug.Log("Бой завершён");
-        if (enemyHealth >= 0)
+        if (enemyBattle.health >= 0)
             Debug.Log($"Winner {enemyBattle.GetType()}, {enemyBattle.health} ХП осталось");
         else
             Debug.Log($"Winner {personBattle.GetType()}, {personBattle.health} ХП осталось");
@@ -144,6 +149,8 @@ public static class CurrentPerson {
     }
 }
 
+
+
 public class Warrior : Person{
     public Warrior(){
         health = 100;
@@ -152,6 +159,8 @@ public class Warrior : Person{
         armor = 2;
         criticalHit = 0.1f;
         element = Elements.Empty;
+        ItemModif sword = new ItemModif("Sword");
+        weapon.AddItem(sword);
     }
 }
 
@@ -163,6 +172,8 @@ public class Mage : Person{
         armor = 0;
         criticalHit = 0.2f;
         element = Elements.Fire;
+        ItemModif magic = new ItemModif("Magic");
+        weapon.AddItem(magic);
     }
 }
 
@@ -174,6 +185,8 @@ public class Goblin : Person{
         armor = 1;
         criticalHit = 0.1f;
         element = Elements.Empty;
+        ItemModif knife = new ItemModif("Knife");
+        weapon.AddItem(knife);
     }
 }
 
@@ -207,6 +220,7 @@ public abstract class Person
     public int armor {get;set;}
     public float criticalHit{get;set;}
     public Elements element{get;set;}
+    public InventoryModif weapon { get; set; } = new InventoryModif();
 }
 
 
