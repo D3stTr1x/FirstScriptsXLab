@@ -63,6 +63,7 @@ public class Damage : MonoBehaviour
                     }
                 }
 
+                currentDamage = Mathf.CeilToInt(currentDamage);
                 health -= currentDamage;
 
                 if (health < 1){
