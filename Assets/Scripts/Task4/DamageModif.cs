@@ -38,10 +38,10 @@ public class DamageModif : MonoBehaviour
 
     public static void CalculateDamage(Person attacker, Person target)
     {
-        if (currentPerson == null || attacker == null)
+        if (target == null || attacker == null)
             return;
 
-        if (currentPerson.health <= 0)
+        if (attacker.health <= 0)
             return;
 
         int damage = UnityEngine.Random.Range(attacker.minDamage, attacker.maxDamage + 1);
@@ -98,11 +98,11 @@ public class DamageModif : MonoBehaviour
                 currentDamage = Mathf.CeilToInt(currentDamage);
                 target.health -= Convert.ToInt32(currentDamage);
 
-                if (target.health < 1){
+                if (target.health <= 0){
                     Debug.Log("Враг уничтожен!");
                 }
                 else 
-                    Debug.Log($"Нанесено {currentDamage} урона");
+                    Debug.Log($"Нанесено {currentDamage} урона от {attacker.GetType()} в {target.GetType()}");
                 
             }
          

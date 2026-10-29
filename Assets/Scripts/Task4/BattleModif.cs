@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum PersonType {Empty, Warrior, Mage};
 public enum EnemyType {Empty, Goblin, Ork, Troll};
@@ -7,8 +8,11 @@ public class BattleModif : MonoBehaviour
 {
     
 
-    [SerializeField] public PersonType person;
-    [SerializeField] public EnemyType enemy;
+    [SerializeField] public PersonType[] person;
+    [SerializeField] public EnemyType[] enemy;
+
+    public List<Person> personTeam = new List<Person>();
+    public List<Person> enemyTeam = new List<Person>();
 
     private int personHealth;
     private int personMinDamage;
@@ -75,16 +79,36 @@ public class BattleModif : MonoBehaviour
             default:
                 return;
         }*/
-        personBattle = CurrentPerson.Create(person);
-        enemyBattle = CurrentPerson.Create(enemy);
-        
+        //personTeam.Clear();
+        //enemyTeam.Clear();
+        if (person != null)
+        {
+            foreach (var p in person)
+            {
+                Person created = CurrentPerson.Create(p);
+                if (created != null)
+                    personTeam.Add(created);
+            }
+        }
+
+        if (enemy != null)
+        {
+            foreach (var e in enemy)
+            {
+                Person created = CurrentPerson.Create(e);
+                if (created != null)
+                    enemyTeam.Add(created);
+            }
+        }
+        personBattle = personTeam.Count > 0 ? personTeam[0] : null;
+        enemyBattle = enemyTeam.Count > 0 ? enemyTeam[0] : null;
     }
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         inventory = new InventoryModif();
         Debug.Log("Start Battle!");
-        if (personBattle == null || enemyBattle == null)
+        if (personTeam.Count == 0 || enemyTeam.Count == 0)
             Debug.Log("Выберите противников в inspector");
         else Round();
     }
@@ -96,26 +120,91 @@ public class BattleModif : MonoBehaviour
     }
 
     private void Round(){
-        if (personBattle == null || enemyBattle == null)
+        if (personTeam.Count == 0 || enemyTeam.Count == 0)
             return;
              
-        while (enemyBattle.health > 0 && personBattle.health > 0)
+        while (HasAlive(personTeam) && HasAlive(enemyTeam))
         {
-            DamageModif.CalculateDamage(personBattle, enemyBattle);
-            
-            if (enemyBattle.health > 0)
+            foreach (var per in personTeam)
+            {
+                if (per.health <= 0) continue;
+                Person target = GetFirstAlive(enemyTeam);
+                if (target == null) break;
+                DamageModif.CalculateDamage(per, target);
+            }
+
+            foreach (var enem in enemyTeam)
+            {
+                if (enem.health <= 0) continue;
+                Person target = GetFirstAlive(personTeam);
+                if (target == null) break;
+                DamageModif.CalculateDamage(enem, target);
+            }
+
+            DeleteDead(personTeam);
+            DeleteDead(enemyTeam);
+
+            if (HasAlive(personTeam) && HasAlive(enemyTeam))
+            {
+                string srtingLog = "";
+                foreach (var per in personTeam)
+                    srtingLog += $"{per.GetType().Name} ({per.health}HP); ";
+                Debug.Log(srtingLog);
+                srtingLog = "";
+                foreach (var per in enemyTeam)
+                    srtingLog += $"{per.GetType().Name} ({per.health}HP); ";
+                Debug.Log(srtingLog);
+            }
+            /*if (enemyBattle.health > 0)
             {
                 DamageModif.CalculateDamage(enemyBattle, personBattle);
             }
             if (enemyBattle.health > 0 && personBattle.health > 0)
                 Debug.Log($"Осталось HP в сражении: {personBattle.GetType()} - {personBattle.health}HP и {enemyBattle.GetType()} - {enemyBattle.health}HP");
-
+            */
         }
         Debug.Log("Бой завершён");
-        if (enemyBattle.health >= 0)
-            Debug.Log($"Winner {enemyBattle.GetType()}, {enemyBattle.health} ХП осталось");
-        else
-            Debug.Log($"Winner {personBattle.GetType()}, {personBattle.health} ХП осталось");
+        if (HasAlive(enemyTeam)){
+            Debug.Log($"Winner Противники");
+            string srtingLog = "";
+            foreach (var per in enemyTeam)
+                srtingLog += $"{per.GetType().Name} ({per.health}HP); ";
+            Debug.Log(srtingLog);
+        }
+        else{
+            Debug.Log($"Winner Герои");
+            string srtingLog = "";
+            foreach (var per in personTeam)
+                srtingLog += $"{per.GetType().Name} ({per.health}HP); ";
+            Debug.Log(srtingLog);
+        }
+    }
+    
+    private void DeleteDead(List<Person> team)
+    {
+        for (int i = team.Count - 1; i>=0; i--)
+        {
+            if (team[i].health <=0)
+                team.RemoveAt(i);
+        }
+    }
+
+    private bool HasAlive(List<Person> team)
+    {
+        foreach (var person in team)
+        {
+            if (person.health > 0) return true;
+        }
+        return false;
+    }
+
+    private Person GetFirstAlive(List<Person> team)
+    {
+        foreach (var person in team)
+        {
+            if (person.health > 0) return person;
+        }
+        return null;
     }
 }
 

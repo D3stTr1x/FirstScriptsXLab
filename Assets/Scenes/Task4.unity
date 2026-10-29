@@ -332,8 +332,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb748e6e4a3403f4bb22d6e86597d3d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BattleModif
-  person: 1
-  enemy: 2
+  person: 
+  enemy: 
 --- !u!4 &1967214954
 Transform:
   m_ObjectHideFlags: 0
