@@ -29,51 +29,47 @@ public class Damage : MonoBehaviour
 
     private void CalculateDamage()
     {
-        if (Mouse.current.leftButton.wasPressedThisFrame)
-        {
-            if (health > 1)
+        if (!Mouse.current.leftButton.wasPressedThisFrame)
+            return;
+        
+        if (health <= 0)
+            return;
+
+        float currentDamage = baseDamage - armor;
+        bool immun = false;
+
+        if (currentDamage <= 1)
+            currentDamage = 1;
+
+        if (elementPlayer != null && elementRb != null && elementRb != Elements.Empty && elementPlayer != Elements.Empty)
             {
-                float currentDamage = baseDamage - armor;
-                if (currentDamage > 1)
+                if (elementRb != elementPlayer)
                 {
-                    if (elementPlayer != null && elementRb != null && elementRb != Elements.Empty && elementPlayer != Elements.Empty)
-                    {
-                        if (elementRb != elementPlayer)
-                        {
-                            currentDamage *= 1.5f;
-                            if (Random.value < criticalHit)
-                            {
-                                currentDamage *= 2f;
-                            }
-                        }
-                        else if (elementRb == elementPlayer)
-                        {
-                            currentDamage = 0f;
-                            Debug.Log("Иммунитет");
-                        }
-                    }
-
+                    currentDamage *= 1.5f;
                 }
-                else 
+                else
                 {
-                    currentDamage = 1;
-                    if (Random.value < criticalHit)
-                    {
-                        currentDamage *= 2f;
-                    }
+                    currentDamage = 0f;
+                    immun = true;
+                    Debug.Log("Иммунитет");
                 }
-
-                currentDamage = Mathf.CeilToInt(currentDamage);
-                health -= currentDamage;
-
-                if (health < 1){
-                    Destroy(gameObject);
-                    Debug.Log("Враг уничтожен!");
-                }
-                if (currentDamage >= 1 && health >= 1)
-                    Debug.Log("Урон: " + currentDamage + "\tХп: " + health);
-                
             }
-        } 
+            if (!immune && currentDamage > 0 && Random.value < criticalHit)
+                currentDamage *= 2f;
+
+            currentDamage = Mathf.FloorToInt(currentDamage);
+            health -= currentDamage;
+        }
+
+        if (health <= 0){
+            Destroy(gameObject);
+            Debug.Log("Враг уничтожен!");
+        }
+        if (currentDamage > 0 && health >= 1)
+        {
+            Debug.Log("Урон: " + currentDamage + "\tХп: " + health);
+                
+        }
+         
     }
 }
