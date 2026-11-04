@@ -47,6 +47,7 @@ public class Damage : MonoBehaviour
                 {
                     currentDamage *= 1.5f;
                 }
+                
                 else
                 {
                     currentDamage = 0f;
@@ -54,6 +55,7 @@ public class Damage : MonoBehaviour
                     Debug.Log("Иммунитет");
                 }
             }
+
             if (!immune && currentDamage > 0 && Random.value < criticalHit)
                 currentDamage *= 2f;
 
@@ -65,11 +67,10 @@ public class Damage : MonoBehaviour
             Destroy(gameObject);
             Debug.Log("Враг уничтожен!");
         }
+
         if (currentDamage > 0 && health >= 1)
         {
             Debug.Log("Урон: " + currentDamage + "\tХп: " + health);
-                
         }
-         
-    }
 }
+

@@ -9,6 +9,18 @@ public class Inventory
 
     public void AddItem(Item item)
     {
+        if (item == null)
+        {
+            Debug.Log("Error: предмет не задан");
+            return;
+        }
+
+        if (item.count <= 0)
+        {
+            Debug.Log("Error: количество предметов должно быть больше 0");
+            return;
+        }
+
         Item newItemToAdd = new Item(item.name);
 
         if (HasItem(newItemToAdd.name))
@@ -16,7 +28,7 @@ public class Inventory
             Item currentItem = FindItem(newItemToAdd.name);
             currentItem.count += item.count;
         }
-        else if (inventoryList.Count != capacity) 
+        else if (inventoryList.Count < capacity) 
         {
             Item addItem = new Item(item.name, item.count);
             inventoryList.Add(addItem);
@@ -26,16 +38,27 @@ public class Inventory
 
     public void RemoveItem(Item item)
     {
+        if (item == null)
+        {
+            Debug.Log("Error: предмет не задан");
+            return;
+        }
+
+        if (item.count <= 0)
+        {
+            Debug.Log("Error: количество предметов должно быть больше 0");
+            return;
+        }
+
         if (HasItem(item.name))
         {
             Item itemToRemove = FindItem(item.name);
-            if (itemToRemove.count > item.count)
+            
+            if (itemToRemove.count >= item.count)
             {
                 itemToRemove.count -= item.count;
-            }
-            else if (itemToRemove.count == 1 || itemToRemove.count == item.count)
-            {
-                inventoryList.Remove(itemToRemove);
+                if (itemToRemove.count == 0)
+                    inventoryList.Remove(itemToRemove);
             }
             else {
                 Debug.Log("Error невозможно удалить больше, чем есть");
