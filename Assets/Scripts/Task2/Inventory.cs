@@ -8,7 +8,14 @@ public class Inventory
 
     public Inventory(int capacity = 10)
     {
-        this.capacity = capacity; //лучшше ограничить значение
+        if (capacity > 10)
+        {
+            this.capacity = capacity;
+        }
+        else 
+        {
+            this.capacity = capacity; //лучшше ограничить значение
+        }
     }
 
     public string name
@@ -108,15 +115,12 @@ public class Inventory
 
     private bool HasItem(string name)
     {
-        if (FindItem(name) == null) //вроде можно сократить 
-            return false;
-        return true;
+        return FindItem(name) == null ? false : true; //вроде можно сократить 
     }
     private Item FindItem(string name)
     {
         return inventoryList.Find(item => item.name == name);
-    }
-    //убрать лишние enter
+    }//убрать лишние enter
 }
 
 public class Item{
