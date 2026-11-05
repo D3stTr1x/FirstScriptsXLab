@@ -97,8 +97,10 @@ public class BattleModif : MonoBehaviour
         bool heroesAlive = HasAlive(personTeam);
         bool enemiesAlive = HasAlive(enemyTeam);
 
-        if (heroesAlive && enemiesAlive) // {}
+        if (heroesAlive && enemiesAlive)
+        {
             Debug.Log("Ничья: лимит раундов");
+        }
         else if (enemiesAlive)
         {
             Debug.Log("Winner Противники");
