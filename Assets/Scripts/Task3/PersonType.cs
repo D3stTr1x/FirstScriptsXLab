@@ -1,4 +1,5 @@
-public enum PersonType {
+public enum PersonType 
+{
     Empty, 
     Warrior, 
     Mage
