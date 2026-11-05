@@ -1,8 +1,5 @@
 using UnityEngine;
 
-//public enum PersonType {Empty, Warrior, Mage}; //enum отдельным скриптом
-//public enum EnemyType {Empty, Goblin, Ork, Troll};
-
 public class UnitData
 {
     public Elements element;
