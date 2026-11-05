@@ -5,7 +5,7 @@ public class UnitData
     public Elements element;
     public WeaponType weapon;
     
-    public string name; //можжет лучше что-то сделать приватным?
+    public string name;
     
     public int health;
     public int minDamage;
@@ -28,7 +28,7 @@ public class UnitData
     }
 }
 
-public class Person //свойства, вроде, лучше в начале скрипта объявлять 
+public class Person
 {
     public string Name { get; }
     public int Health { get; private set; }
