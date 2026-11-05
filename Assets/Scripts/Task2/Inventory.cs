@@ -8,7 +8,14 @@ public class Inventory
 
     public Inventory(int capacity = 10)
     {
-        this.capacity = capacity;
+        if (capacity > 10)
+        {
+            this.capacity = capacity;
+        }
+        else 
+        {
+            this.capacity = capacity;
+        }
     }
 
     public string name
@@ -108,15 +115,12 @@ public class Inventory
 
     private bool HasItem(string name)
     {
-        if (FindItem(name) == null)
-            return false;
-        return true;
+        return FindItem(name) == null ? false : true;
     }
     private Item FindItem(string name)
     {
         return inventoryList.Find(item => item.name == name);
     }
-    
 }
 
 public class Item{
