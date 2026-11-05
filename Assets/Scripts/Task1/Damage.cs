@@ -1,8 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-    //во всех скриптах прописать namespace
-
 public class Damage : MonoBehaviour
 {
     [SerializeField] private float m_health;
