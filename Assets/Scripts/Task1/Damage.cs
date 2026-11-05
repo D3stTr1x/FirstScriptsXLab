@@ -26,7 +26,7 @@ public class Damage : MonoBehaviour
         if (m_health <= 0)
             return;
 
-        int finalDamage = DamageCalculator.CalculateDamage(m_baseDamage, m_armor, m_criticalHit, m_elementPlayer, m_m_elementRb);
+        int finalDamage = DamageCalculator.CalculateDamage(m_baseDamage, m_armor, m_criticalHit, m_elementPlayer, m_elementRb);
 
         m_health -= finalDamage;
 

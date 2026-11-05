@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class Battle : MonoBehaviour
 {
-    [SerializeField] private PersonType person;
-    [SerializeField] private EnemyType enemy;
-    [SerializeField] private int maxRounds = 100;
+    [SerializeField] private PersonType m_person;
+    [SerializeField] private EnemyType m_enemy;
+    [SerializeField] private int m_maxRounds = 100;
 
-    private Person personBattle;
-    private Person enemyBattle;
+    private m_person personBattle;
+    private m_person enemyBattle;
 
     void Awake()
     {
-        personBattle = UnitDatabase.Create(person);
-        enemyBattle = UnitDatabase.Create(enemy);
+        personBattle = UnitDatabase.Create(m_person);
+        enemyBattle = UnitDatabase.Create(m_enemy);
     }
 
     void Start()
@@ -29,7 +29,7 @@ public class Battle : MonoBehaviour
     {
         int roundNumber = 0;
 
-        while (personBattle.IsAlive && enemyBattle.IsAlive && roundNumber < maxRounds)
+        while (personBattle.IsAlive && enemyBattle.IsAlive && roundNumber < m_maxRounds)
         {
             roundNumber++;
 
