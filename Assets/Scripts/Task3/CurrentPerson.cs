@@ -1,63 +1,103 @@
+using UnityEngine;
+
 public enum PersonType {Empty, Warrior, Mage};
 
 public enum EnemyType {Empty, Goblin, Ork, Troll};
 
-public class Person
+public class UnitData
 {
+    public string name;
     public int health;
     public int minDamage;
     public int maxDamage;
-    public int armor;
-    public string characterType;
-    public float criticalHit { get; set; }
-    public Elements element { get; set; }
-    public Item weapon { get; set; }
+    public float armor;
+    public float criticalChance;
+    public Elements element;
+    public WeaponType weapon;
 
-    public Person(int health, int minDamage, int maxDamage, int armor, string characterType, float criticalHit, Elements element, Item weapon)
+    public UnitData(string name, int health, int minDamage, int maxDamage, float armor, float criticalChance, Elements element, WeaponType weapon)
     {
+        this.name = name;
         this.health = health;
         this.minDamage = minDamage;
         this.maxDamage = maxDamage;
         this.armor = armor;
-        this.characterType = characterType;
-        this.criticalHit = criticalHit;
+        this.criticalChance = criticalChance;
         this.element = element;
         this.weapon = weapon;
+    }
+}
+
+public class Person
+{
+    public string Name { get; }
+    public int Health { get; private set; }
+    public int MinDamage { get; }
+    public int MaxDamage { get; }
+    public float Armor { get; }
+    public float CriticalChance { get; }
+    public Elements Element { get; }
+    public WeaponType Weapon { get; }
+
+    public bool IsAlive => Health > 0;
+
+    public Person(UnitData data)
+    {
+        Name = data.name;
+        Health = data.health;
+        MinDamage = data.minDamage;
+        MaxDamage = data.maxDamage;
+        Armor = data.armor;
+        CriticalChance = data.criticalChance;
+        Element = data.element;
+        Weapon = data.weapon;
     }
 
     public int GetDamage()
     {
-        return UnityEngine.Random.Range(minDamage, maxDamage + 1);
+        return Random.Range(MinDamage, MaxDamage + 1);
+    }
+
+    public void TakeDamage(int amount)
+    {
+        if (amount <= 0)
+            return;
+        Health = Mathf.Max(0, Health - amount);
     }
 }
 
-public static class CurrentPerson
+public static class UnitDatabase
 {
-    public static Person Create(PersonType type)
+    public static UnitData Get(PersonType type)
     {
         switch (type)
         {
-            case PersonType.Warrior:
-                return new Person(100, 10, 16, 3, "Warrior", 0.10f, Elements.Fire, new Item("Sword"));
-            case PersonType.Mage:
-                return new Person(130, 6, 12, 1, "Mage", 0.15f, Elements.Magic, new Item("Magic"));
-            default:
-                return null;
+            case PersonType.Warrior: return new UnitData("Warrior", 100, 10, 16, 3f, 0.10f, Elements.Fire,  WeaponType.Sword);
+            case PersonType.Mage:    return new UnitData("Mage",     130, 6,  12, 1f, 0.15f, Elements.Magic, WeaponType.Magic);
+            default: return null;
         }
+    }
+
+    public static UnitData Get(EnemyType type)
+    {
+        switch (type)
+        {
+            case EnemyType.Goblin: return new UnitData("Goblin", 50,  4, 8,  1f, 0.05f, Elements.Ice,   WeaponType.Knife);
+            case EnemyType.Ork:    return new UnitData("Ork",    80,  5, 10, 2f, 0.05f, Elements.Empty, WeaponType.None);
+            case EnemyType.Troll:  return new UnitData("Troll",  140, 8, 12, 3f, 0.05f, Elements.Ice,   WeaponType.None);
+            default: return null;
+        }
+    }
+
+    public static Person Create(PersonType type)
+    {
+        UnitData data = Get(type);
+        return data == null ? null : new Person(data);
     }
 
     public static Person Create(EnemyType type)
     {
-        switch (type)
-        {
-            case EnemyType.Goblin:
-                return new Person(50, 4, 8, 1, "Goblin", 0.05f, Elements.Ice, new Item("Knife"));
-            case EnemyType.Ork:
-                return new Person(80, 5, 10, 2, "Ork", 0.05f, Elements.Empty, null);
-            case EnemyType.Troll:
-                return new Person(140, 8, 12, 3, "Troll", 0.05f, Elements.Ice, null);
-            default:
-                return null;
-        }
+        UnitData data = Get(type);
+        return data == null ? null : new Person(data);
     }
 }

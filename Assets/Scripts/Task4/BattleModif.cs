@@ -10,16 +10,13 @@ public class BattleModif : MonoBehaviour
     public List<Person> personTeam = new List<Person>();
     public List<Person> enemyTeam = new List<Person>();
 
-    public Person personBattle;
-    public Person enemyBattle;
-    
     void Awake()
     {
         if (person != null)
         {
             foreach (var p in person)
             {
-                Person created = CurrentPerson.Create(p);
+                Person created = UnitDatabase.Create(p);
                 if (created != null)
                     personTeam.Add(created);
             }
@@ -29,15 +26,13 @@ public class BattleModif : MonoBehaviour
         {
             foreach (var e in enemy)
             {
-                Person created = CurrentPerson.Create(e);
+                Person created = UnitDatabase.Create(e);
                 if (created != null)
                     enemyTeam.Add(created);
             }
         }
-        personBattle = personTeam.Count > 0 ? personTeam[0] : null;
-        enemyBattle = enemyTeam.Count > 0 ? enemyTeam[0] : null;
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         Debug.Log("Start Battle!");
@@ -46,34 +41,32 @@ public class BattleModif : MonoBehaviour
         else Round();
     }
 
-    private void Round(){
-        if (personTeam.Count == 0 || enemyTeam.Count == 0)
-            return;
-
+    private void Round()
+    {
         int roundNumber = 0;
-             
+
         while (HasAlive(personTeam) && HasAlive(enemyTeam) && roundNumber < maxRounds)
         {
             roundNumber++;
 
-            foreach (var per in personTeam)
+            foreach (var hero in personTeam)
             {
-                if (per.health <= 0) continue;
+                if (!hero.IsAlive) continue;
                 Person target = GetFirstAlive(enemyTeam);
                 if (target == null) break;
-                DamageModif.CalculateDamage(per, target);
+                DamageModif.CalculateDamage(hero, target);
             }
 
-            foreach (var enem in enemyTeam)
+            foreach (var foe in enemyTeam)
             {
-                if (enem.health <= 0) continue;
+                if (!foe.IsAlive) continue;
                 Person target = GetFirstAlive(personTeam);
                 if (target == null) break;
-                DamageModif.CalculateDamage(enem, target);
+                DamageModif.CalculateDamage(foe, target);
             }
 
-            DeleteDead(personTeam);
-            DeleteDead(enemyTeam);
+            personTeam.RemoveAll(p => !p.IsAlive);
+            enemyTeam.RemoveAll(p => !p.IsAlive);
 
             if (HasAlive(personTeam) && HasAlive(enemyTeam))
             {
@@ -81,58 +74,45 @@ public class BattleModif : MonoBehaviour
                 Debug.Log(TeamToString(enemyTeam));
             }
         }
+
         Debug.Log("Бой завершён");
-        if (HasAlive(enemyTeam) && HasAlive(personTeam))
-        {
+        bool heroesAlive = HasAlive(personTeam);
+        bool enemiesAlive = HasAlive(enemyTeam);
+
+        if (heroesAlive && enemiesAlive)
             Debug.Log("Ничья: лимит раундов");
-        }
-        else if (HasAlive(enemyTeam))
+        else if (enemiesAlive)
         {
             Debug.Log("Winner Противники");
             Debug.Log(TeamToString(enemyTeam));
         }
-        else if (HasAlive(personTeam))
+        else if (heroesAlive)
         {
             Debug.Log("Winner Герои");
             Debug.Log(TeamToString(personTeam));
         }
         else
-        {
             Debug.Log("Ничья");
-        }
     }
 
     private string TeamToString(List<Person> team)
     {
         string result = "";
         foreach (var p in team)
-            result += $"{p.characterType} ({p.health}HP); ";
+            result += $"{p.Name} ({p.Health}HP); ";
         return result;
-    }
-    
-    private void DeleteDead(List<Person> team)
-    {
-        for (int i = team.Count - 1; i>=0; i--)
-        {
-            if (team[i].health <=0)
-                team.RemoveAt(i);
-        }
     }
 
     private bool HasAlive(List<Person> team)
     {
-        foreach (var person in team)
-        {
-            if (person.health > 0) return true;
-        }
-        return false;
+        return GetFirstAlive(team) != null;
     }
 
     private Person GetFirstAlive(List<Person> team)
     {
-        foreach (var person in team)
+        foreach (var p in team)
         {
-            if (person.health > 0) return person;
+            if (p.IsAlive) return p;
         }
         return null;
     }

@@ -1,16 +1,23 @@
 using UnityEngine;
 
-public enum Elements {Empty, Fire, Ice, Magic}
+public enum Elements { Empty, Fire, Ice, Magic }
+public enum WeaponType { None, Knife, Sword, Magic }
 
-public class DamageCalculator
+public static class DamageCalculator
 {
+    public static int WeaponBonus(WeaponType weapon)
+    {
+        switch (weapon)
+        {
+            case WeaponType.Knife: return 2;
+            case WeaponType.Sword: return 4;
+            case WeaponType.Magic: return 4;
+            default: return 0;
+        }
+    }
+
     public static int CalculateDamage(float baseDamage, float armor, float criticalChance, Elements attackerElement, Elements targetElement, float weaponBonus = 0f)
     {
-        float damage = baseDamage - armor;
-
-        if (damage <= 1f)
-            damage = 1f;
-
         bool hasElements = attackerElement != Elements.Empty && targetElement != Elements.Empty;
 
         if (hasElements && attackerElement == targetElement)
@@ -19,7 +26,9 @@ public class DamageCalculator
             return 0;
         }
 
-        if (hasElements && attackerElement != targetElement)
+        float damage = Mathf.Max(baseDamage - armor, 1f);
+
+        if (hasElements)
             damage *= 1.5f;
 
         if (Random.value < criticalChance)
@@ -27,6 +36,17 @@ public class DamageCalculator
 
         damage += weaponBonus;
 
-        return Mathf.FloorToInt(damage);
+        return Mathf.Max(1, Mathf.FloorToInt(damage));
+    }
+
+    public static int CalculateDamage(Person attacker, Person target)
+    {
+        return CalculateDamage(
+            attacker.GetDamage(),
+            target.Armor,
+            attacker.CriticalChance,
+            attacker.Element,
+            target.Element,
+            WeaponBonus(attacker.Weapon));
     }
 }

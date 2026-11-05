@@ -9,54 +9,53 @@ public class Battle : MonoBehaviour
     private Person personBattle;
     private Person enemyBattle;
 
-    
     void Awake()
     {
-        personBattle = CurrentPerson.Create(person);
-        enemyBattle = CurrentPerson.Create(enemy);
+        personBattle = UnitDatabase.Create(person);
+        enemyBattle = UnitDatabase.Create(enemy);
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         Debug.Log("Start Battle!");
 
         if (personBattle == null || enemyBattle == null)
-        {    
             Debug.Log("Выберите противников в inspector");
-        }
-        else Round();
+        else
+            Round();
     }
 
-    private void Round(){
+    private void Round()
+    {
         int roundNumber = 0;
 
-        while (enemyBattle.health > 0 && personBattle.health > 0 && roundNumber < maxRounds)
+        while (personBattle.IsAlive && enemyBattle.IsAlive && roundNumber < maxRounds)
         {
             roundNumber++;
 
-            int personDamage = personBattle.GetDamage();
-            int enemyDamage = personBattle.GetDamage();
-            
-            enemyBattle.health -= personDamage;
+            int personDamage = DamageCalculator.CalculateDamage(personBattle, enemyBattle);
+            enemyBattle.TakeDamage(personDamage);
 
-            if (enemyBattle.health > 0)
+            int enemyDamage = 0;
+            if (enemyBattle.IsAlive)
             {
-                personBattle.health -= enemyDamage;
+                enemyDamage = DamageCalculator.CalculateDamage(enemyBattle, personBattle);
+                personBattle.TakeDamage(enemyDamage);
             }
 
-            if (personBattle.health > 0 && enemyBattle.health > 0)
-                Debug.Log($"{person} нанёс {personDamage} урона, у противника {enemyBattle.health} ХП; {enemy} нанёс {enemyDamage} урона, у героя {personBattle.health}");
+            if (personBattle.IsAlive && enemyBattle.IsAlive)
+                Debug.Log($"{personBattle.Name} нанёс {personDamage} урона, у противника {enemyBattle.Health} ХП; " +
+                          $"{enemyBattle.Name} нанёс {enemyDamage} урона, у героя {personBattle.Health}");
         }
 
         Debug.Log("Бой завершён");
-        if (personBattle.health > 0 && enemyBattle.health <= 0)
-            Debug.Log($"Winner {person}, {personBattle.health} ХП осталось");
-        else if (enemyBattle.health > 0 && personBattle.health <= 0)
-            Debug.Log($"Winner {enemy}, {enemyBattle.health} ХП осталось");
-        else if (roundNumber >= maxRounds && personBattle.health > 0 && enemyBattle.health > 0)
-            Debug.Log("Ничья: Лимит раундов");
+        if (personBattle.IsAlive && !enemyBattle.IsAlive)
+            Debug.Log($"Winner {personBattle.Name}, {personBattle.Health} ХП осталось");
+        else if (enemyBattle.IsAlive && !personBattle.IsAlive)
+            Debug.Log($"Winner {enemyBattle.Name}, {enemyBattle.Health} ХП осталось");
+        else if (personBattle.IsAlive && enemyBattle.IsAlive)
+            Debug.Log("Ничья: лимит раундов");
         else
             Debug.Log("Ничья");
     }
 }
-
