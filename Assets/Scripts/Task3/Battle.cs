@@ -6,16 +6,16 @@ public class Battle : MonoBehaviour
     [SerializeField] private EnemyType m_enemy;
     [SerializeField] private int m_maxRounds = 100;
 
-    private m_person personBattle; //m_person используется как тип данных
-    private m_person enemyBattle;
+    private Person personBattle;
+    private Person enemyBattle;
 
-    void Awake() //модификатор доступа
+    private void Awake()
     {
         personBattle = UnitDatabase.Create(m_person);
         enemyBattle = UnitDatabase.Create(m_enemy);
     }
 
-    void Start() //модификатор доступа
+    private void Start()
     {
         Debug.Log("Start Battle!");
 
@@ -49,13 +49,21 @@ public class Battle : MonoBehaviour
         }
 
         Debug.Log("Бой завершён");
-        if (personBattle.IsAlive && !enemyBattle.IsAlive) //отделить все {}
+        if (personBattle.IsAlive && !enemyBattle.IsAlive)
+        {
             Debug.Log($"Winner {personBattle.Name}, {personBattle.Health} ХП осталось");
+        }
         else if (enemyBattle.IsAlive && !personBattle.IsAlive)
+        {
             Debug.Log($"Winner {enemyBattle.Name}, {enemyBattle.Health} ХП осталось");
+        }
         else if (personBattle.IsAlive && enemyBattle.IsAlive)
+        {
             Debug.Log("Ничья: лимит раундов");
+        }
         else
+        {
             Debug.Log("Ничья");
+        }
     }
 }
