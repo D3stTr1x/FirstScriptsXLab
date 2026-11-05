@@ -32,7 +32,8 @@ public class Damage : MonoBehaviour
             return;
         }
 
-        int finalDamage = DamageCalculator.CalculateDamage(m_baseDamage, m_armor, m_criticalHit, m_elementPlayer, m_elementRb); //длинная строка, разбить на две
+        int finalDamage = DamageCalculator.CalculateDamage(m_baseDamage, m_armor,
+            m_criticalHit, m_elementPlayer, m_elementRb); //длинная строка, разбить на две
 
         if (m_health - finalDamage <= 0)
         {
