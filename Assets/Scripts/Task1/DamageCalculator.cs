@@ -1,8 +1,5 @@
 using UnityEngine;
 
-//public enum Elements { Empty, Fire, Ice, Magic } //енамы выноси одтельным скриптом 
-//public enum WeaponType { None, Knife, Sword, Magic }
-
 public static class DamageCalculator
 {
     public static int WeaponBonus(WeaponType weapon)
