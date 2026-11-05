@@ -18,7 +18,7 @@ public static class DamageCalculator
 
     public static int CalculateDamage(float baseDamage, float armor, 
                                       float criticalChance, Elements attackerElement, 
-                                      Elements targetElement, float weaponBonus = 0f) //длинная строка
+                                      Elements targetElement, float weaponBonus = 0f)
     {
         bool hasElements = attackerElement != Elements.Empty && targetElement != Elements.Empty;
 
@@ -30,12 +30,12 @@ public static class DamageCalculator
 
         float damage = Mathf.Max(baseDamage - armor, 1f);
 
-        if (hasElements) //лучше все выделять {}
+        if (hasElements)
         {
             damage *= 1.5f;
         }
 
-        if (Random.value < criticalChance)//{}
+        if (Random.value < criticalChance)
         {
             damage *= 2f;
         }
