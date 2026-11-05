@@ -3,9 +3,21 @@ using System.Collections.Generic;
 
 public class Inventory
 {
-    private static int capacity = 10;
+    private int capacity;
     private List<Item> inventoryList = new List<Item>();
 
+    public Inventory(int capacity = 10)
+    {
+        this.capacity = capacity;
+    }
+
+    public string name
+    {
+        get
+        {
+            return inventoryList.Count > 0 ? inventoryList[0].name : null;
+        }
+    }
 
     public void AddItem(Item item)
     {
@@ -21,11 +33,15 @@ public class Inventory
             return;
         }
 
-        Item newItemToAdd = new Item(item.name);
-
-        if (HasItem(newItemToAdd.name))
+        if (string.IsNullOrEmpty(item.name))
         {
-            Item currentItem = FindItem(newItemToAdd.name);
+            Debug.Log("Error: имя предмета не задано");
+            return;
+        }
+
+        if (HasItem(item.name))
+        {
+            Item currentItem = FindItem(item.name);
             currentItem.count += item.count;
         }
         else if (inventoryList.Count < capacity) 
@@ -60,11 +76,13 @@ public class Inventory
                 if (itemToRemove.count == 0)
                     inventoryList.Remove(itemToRemove);
             }
-            else {
+            else 
+            {
                 Debug.Log("Error невозможно удалить больше, чем есть");
             }
         }
-        else{
+        else
+        {
             Debug.Log("Error Элемент отсутсвует");
         }
     }
@@ -72,7 +90,11 @@ public class Inventory
     public void Print()
     {
         if (inventoryList.Count == 0)
+        {
             Debug.Log("Инвентарь пуст");
+            return;
+        }
+        
         string result = "";
         int fullCount = 0;
         foreach (var item in inventoryList)

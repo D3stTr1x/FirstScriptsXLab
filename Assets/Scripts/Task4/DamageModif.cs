@@ -1,39 +1,16 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-using System;
-
-public enum Elements {Empty, Fire, Ice, Magic};
 
 public class DamageModif : MonoBehaviour
 {
-    
-    //[SerializeField] private float health;
-
-
-    //[SerializeField] private Elements elementRb;
-    //[SerializeField] private Elements elementPlayer;
-
-    //[SerializeField] private int baseDamage;
-    //[SerializeField] private float criticalHit;
-    //[SerializeField] private float armor;
-    //private Rigidbody rb;
-
     [SerializeField] private BattleModif battle;
     [SerializeField] private bool isEnemy;
 
     private static Person currentPerson;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        currentPerson = isEnemy ? battle.enemyBattle : battle.personBattle;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        if (battle != null)
+            currentPerson = isEnemy ? battle.enemyBattle : battle.personBattle;
     }
 
     public static void CalculateDamage(Person attacker, Person target)
@@ -41,70 +18,65 @@ public class DamageModif : MonoBehaviour
         if (target == null || attacker == null)
             return;
 
-        if (attacker.health <= 0)
+        if (attacker.health <= 0 || target.health <= 0)
             return;
 
         int damage = UnityEngine.Random.Range(attacker.minDamage, attacker.maxDamage + 1);
+        float currentDamage = damage - target.armor;
 
-
-            if (target.health > 0)
+        if (currentDamage > 1)
+        {
+            if (attacker.element != Elements.Empty && target.element != Elements.Empty)
             {
-                float currentDamage = damage - target.armor;
-                if (currentDamage > 1)
+                if (attacker.element != target.element)
                 {
-                    if (attacker.element != Elements.Empty && target.element != Elements.Empty)
-                    {
-                        if (attacker.element != target.element)
-                        {
-                            currentDamage *= 1.5f;
-                            if (UnityEngine.Random.value < attacker.criticalHit)
-                            {
-                                currentDamage *= 2f;
-                            }
-                            
-                            if (attacker.weapon != null)
-                            {
-                                if (attacker.weapon.name == "Knife")
-                                {
-                                    currentDamage += 2;
-                                }
-                                else if (attacker.weapon.name == "Sword")
-                                {
-                                    currentDamage += 4;
-                                }
-                                else if (attacker.weapon.name == "Magic" && attacker.GetType().Name == "Mage")
-                                {
-                                    currentDamage += 4;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            currentDamage = 0f;
-                            Debug.Log("Иммунитет");
-                        }
-                    }
+                    currentDamage *= 1.5f;
 
-                }
-                else 
-                {
-                    currentDamage = 1;
                     if (UnityEngine.Random.value < attacker.criticalHit)
                     {
                         currentDamage *= 2f;
                     }
+                            
+                    if (attacker.weapon != null)
+                    {
+                        if (attacker.weapon.name == "Knife")
+                        {
+                            currentDamage += 2;
+                        }
+                        else if (attacker.weapon.name == "Sword")
+                        {
+                            currentDamage += 4;
+                        }
+                        else if (attacker.weapon.name == "Magic" && attacker.characterType == "Mage")
+                        {
+                            currentDamage += 4;
+                        }
+                    }
                 }
-
-                currentDamage = Mathf.CeilToInt(currentDamage);
-                target.health -= Convert.ToInt32(currentDamage);
-
-                if (target.health <= 0){
-                    Debug.Log("Враг уничтожен!");
+                else
+                {
+                    currentDamage = 0f;
+                    Debug.Log("Иммунитет");
                 }
-                else 
-                    Debug.Log($"Нанесено {currentDamage} урона от {attacker.GetType()} в {target.GetType()}");
-                
             }
-         
+        }
+        else 
+        {
+            currentDamage = 1;
+            if (UnityEngine.Random.value < attacker.criticalHit)
+            {
+                currentDamage *= 2f;
+            }
+        }
+
+        int finalDamage = Mathf.FloorToInt(currentDamage);
+        target.health -= finalDamage;
+
+        if (target.health <= 0){
+            Debug.Log("Враг уничтожен!");
+        }
+        else 
+            Debug.Log($"Нанесено {currentDamage} урона от {attacker.GetType()} в {target.GetType()}");
+                
     }
 }
