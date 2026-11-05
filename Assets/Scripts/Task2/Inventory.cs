@@ -14,7 +14,7 @@ public class Inventory
         }
         else 
         {
-            this.capacity = capacity; //лучшше ограничить значение
+            this.capacity = capacity;
         }
     }
 
@@ -115,12 +115,12 @@ public class Inventory
 
     private bool HasItem(string name)
     {
-        return FindItem(name) == null ? false : true; //вроде можно сократить 
+        return FindItem(name) == null ? false : true;
     }
     private Item FindItem(string name)
     {
         return inventoryList.Find(item => item.name == name);
-    }//убрать лишние enter
+    }
 }
 
 public class Item{
