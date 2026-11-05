@@ -1,19 +1,22 @@
 using UnityEngine;
 
-public enum PersonType {Empty, Warrior, Mage}; //enum отдельным скриптом
-
-public enum EnemyType {Empty, Goblin, Ork, Troll};
+//public enum PersonType {Empty, Warrior, Mage}; //enum отдельным скриптом
+//public enum EnemyType {Empty, Goblin, Ork, Troll};
 
 public class UnitData
 {
+    public Elements element;
+    public WeaponType weapon;
+    
     public string name; //можжет лучше что-то сделать приватным?
+    
     public int health;
     public int minDamage;
     public int maxDamage;
+    
     public float armor;
     public float criticalChance;
-    public Elements element; //такие типы данных лучше выносить в самое начало, потом уже int, string и т.д.
-    public WeaponType weapon;
+    
 
     public UnitData(string name, int health, int minDamage, int maxDamage, float armor, float criticalChance, Elements element, WeaponType weapon)
     {
@@ -68,23 +71,33 @@ public class Person //свойства, вроде, лучше в начале �
 
 public static class UnitDatabase
 {
-    public static UnitData Get(PersonType type) //длинные строки (можно попробовать вынести в отделный метод)
+    public static UnitData Get(PersonType type)
     {
         switch (type)
         {
-            case PersonType.Warrior: return new UnitData("Warrior", 100, 10, 16, 3f, 0.10f, Elements.Fire,  WeaponType.Sword);
-            case PersonType.Mage:    return new UnitData("Mage",     130, 6,  12, 1f, 0.15f, Elements.Magic, WeaponType.Magic);
+            case PersonType.Warrior: 
+                return new UnitData("Warrior", 100, 10, 16, 3f, 0.10f, 
+                                    Elements.Fire,  WeaponType.Sword);
+            case PersonType.Mage:    
+                return new UnitData("Mage",     130, 6,  12, 1f, 0.15f, 
+                                    Elements.Magic, WeaponType.Magic);
             default: return null;
         }
     }
 
-    public static UnitData Get(EnemyType type) //длинные строки (можно попробовать вынести в отделный метод)
+    public static UnitData Get(EnemyType type)
     {
         switch (type)
         {
-            case EnemyType.Goblin: return new UnitData("Goblin", 50,  4, 8,  1f, 0.05f, Elements.Ice,   WeaponType.Knife);
-            case EnemyType.Ork:    return new UnitData("Ork",    80,  5, 10, 2f, 0.05f, Elements.Empty, WeaponType.None);
-            case EnemyType.Troll:  return new UnitData("Troll",  140, 8, 12, 3f, 0.05f, Elements.Ice,   WeaponType.None);
+            case EnemyType.Goblin: 
+                return new UnitData("Goblin", 50,  4, 8,  1f, 0.05f, 
+                                    Elements.Ice,   WeaponType.Knife);
+            case EnemyType.Ork:    
+                return new UnitData("Ork",    80,  5, 10, 2f, 0.05f, 
+                                    Elements.Empty, WeaponType.None);
+            case EnemyType.Troll:  
+                return new UnitData("Troll",  140, 8, 12, 3f, 0.05f, 
+                                    Elements.Ice,   WeaponType.None);
             default: return null;
         }
     }
