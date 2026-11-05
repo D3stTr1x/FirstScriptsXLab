@@ -8,25 +8,25 @@ public class UIController : MonoBehaviour
     [SerializeField] private TMP_Dropdown m_menu;
     [SerializeField] private TMP_InputField m_count;
     
-    void Start() //проставить модификаторы доступа 
+    private void Start()
     {
         inventory = new Inventory();
     }
-
-    //убирать пустые методы
-    void Update() 
-    {
-        
-    }
-
+    
     public void AddButton(){
         int currentCount;
         int index  = m_menu.value;
-        string itemName = m_menu.options[index].text; //отделить цикл 
-        if (string.IsNullOrEmpty(m_count.text)) //лучше всегда в if ставить фигурные скобки, даже если всего одна строка
-            currentCount = 1;           
+        string itemName = m_menu.options[index].text;
+        
+        if (string.IsNullOrEmpty(m_count.text))
+        {
+            currentCount = 1;
+        }
         else 
+        {
             currentCount = Convert.ToInt32(m_count.text);
+        }
+        
         if (itemName != null)
         {
             Item newItem = new Item(itemName, currentCount);
@@ -42,7 +42,7 @@ public class UIController : MonoBehaviour
             currentCount = 1;
         else   
             currentCount = Convert.ToInt32(m_count.text);
-        if (itemName != null) //можно добавить, чтобы строка могла быть пустрой? (IsNullOrEmpty)
+        if (itemName != null || string.IsNullOrEmpty(itemName))
         {
             Item newItem = new Item(itemName, currentCount);
             inventory.RemoveItem(newItem);
