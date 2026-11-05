@@ -1,18 +1,18 @@
 using UnityEngine;
 
-public enum PersonType {Empty, Warrior, Mage};
+public enum PersonType {Empty, Warrior, Mage}; //enum отдельным скриптом
 
 public enum EnemyType {Empty, Goblin, Ork, Troll};
 
 public class UnitData
 {
-    public string name;
+    public string name; //можжет лучше что-то сделать приватным?
     public int health;
     public int minDamage;
     public int maxDamage;
     public float armor;
     public float criticalChance;
-    public Elements element;
+    public Elements element; //такие типы данных лучше выносить в самое начало, потом уже int, string и т.д.
     public WeaponType weapon;
 
     public UnitData(string name, int health, int minDamage, int maxDamage, float armor, float criticalChance, Elements element, WeaponType weapon)
@@ -28,7 +28,7 @@ public class UnitData
     }
 }
 
-public class Person
+public class Person //свойства, вроде, лучше в начале скрипта объявлять 
 {
     public string Name { get; }
     public int Health { get; private set; }
@@ -68,7 +68,7 @@ public class Person
 
 public static class UnitDatabase
 {
-    public static UnitData Get(PersonType type)
+    public static UnitData Get(PersonType type) //длинные строки (можно попробовать вынести в отделный метод)
     {
         switch (type)
         {
@@ -78,7 +78,7 @@ public static class UnitDatabase
         }
     }
 
-    public static UnitData Get(EnemyType type)
+    public static UnitData Get(EnemyType type) //длинные строки (можно попробовать вынести в отделный метод)
     {
         switch (type)
         {

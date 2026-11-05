@@ -10,8 +10,8 @@ public class BattleModif : MonoBehaviour
     public List<Person> personTeam = new List<Person>();
     public List<Person> enemyTeam = new List<Person>();
 
-    void Awake()
-    {
+    void Awake() //модификатор доступа
+    { //можно maxRounds защитить от нулевого значения
         if (person != null)
         {
             foreach (var p in person)
@@ -36,7 +36,7 @@ public class BattleModif : MonoBehaviour
     void Start()
     {
         Debug.Log("Start Battle!");
-        if (personTeam.Count == 0 || enemyTeam.Count == 0)
+        if (personTeam.Count == 0 || enemyTeam.Count == 0) // {}
             Debug.Log("Выберите противников в inspector");
         else Round();
     }
@@ -51,15 +51,15 @@ public class BattleModif : MonoBehaviour
 
             foreach (var hero in personTeam)
             {
-                if (!hero.IsAlive) continue;
+                if (!hero.IsAlive) continue; // {}
                 Person target = GetFirstAlive(enemyTeam);
-                if (target == null) break;
+                if (target == null) break; 
                 DamageModif.CalculateDamage(hero, target);
             }
 
             foreach (var foe in enemyTeam)
             {
-                if (!foe.IsAlive) continue;
+                if (!foe.IsAlive) continue; // {}
                 Person target = GetFirstAlive(personTeam);
                 if (target == null) break;
                 DamageModif.CalculateDamage(foe, target);
@@ -79,7 +79,7 @@ public class BattleModif : MonoBehaviour
         bool heroesAlive = HasAlive(personTeam);
         bool enemiesAlive = HasAlive(enemyTeam);
 
-        if (heroesAlive && enemiesAlive)
+        if (heroesAlive && enemiesAlive) // {}
             Debug.Log("Ничья: лимит раундов");
         else if (enemiesAlive)
         {
